@@ -95,7 +95,7 @@
     nodejs
     claude-code
     vscode
-    clash-verge-rev
+    clash-verge-rev  
     google-chrome
   ];
 
