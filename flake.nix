@@ -2,7 +2,7 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgs.url = "https://mirrors.ustc.edu.cn/nix-channels/nixpkgs-unstable/nixexprs.tar.xz";
+    #nixpkgs.url = "https://mirrors.ustc.edu.cn/nix-channels/nixpkgs-unstable/nixexprs.tar.xz";
     home-manager = {
       # url = "http://hk-yd-proxy.gitwarp.com:6699/https://github.com/nix-community/home-manager/archive/54b2879ce622d44415e727905925e21b8f833a98.tar.gz";
       # The `follows` keyword in inputs is used for inheritance.
