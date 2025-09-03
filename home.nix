@@ -1,58 +1,98 @@
+# Home Manager 用户配置文件
+
 { config, pkgs, ... }:
 
 {
-  # 注意修改这里的用户名与用户目录
+  # 用户基本信息
   home.username = "chr";
   home.homeDirectory = "/home/chr";
 
-  # 直接将当前文件夹的配置文件，链接到 Home 目录下的指定位置
-  # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
-
-  # 递归将某个文件夹中的文件，链接到 Home 目录下的指定位置
-  # home.file.".config/i3/scripts" = {
-  #   source = ./scripts;
-  #   recursive = true;   # 递归整个文件夹
-  #   executable = true;  # 将其中所有文件添加「执行」权限
-  # };
-
-  # 直接以 text 的方式，在 nix 配置文件中硬编码文件内容
-  # home.file.".xxx".text = ''
-  #     xxx
-  # '';
-
-  # 通过 home.packages 安装一些常用的软件
-  # 这些软件将仅在当前用户下可用，不会影响系统级别的配置
-  # 建议将所有 GUI 软件，以及与 OS 关系不大的 CLI 软件，都通过 home.packages 安装
-  home.packages = with pkgs;[
-    nodejs
-    claude-code
+  # 用户软件包
+  home.packages = with pkgs; [
+    # 开发工具
+    nodejs_22
     vscode
-    clash-verge-rev  
+    
+    # 网络工具
+    clash-verge-rev
     google-chrome
+    
+    # 主题
+    catppuccin-fcitx5
+    
+    # 系统工具
+    gh
   ];
 
+  # 中文输入法配置
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.addons = with pkgs; [
-    fcitx5-chinese-addons
-    fcitx5-gtk
-    kdePackages.fcitx5-qt
-    fcitx5-rime
-    fcitx5-configtool
-];
-};
+      fcitx5-chinese-addons
+      fcitx5-gtk
+      kdePackages.fcitx5-qt
+      fcitx5-rime
+      fcitx5-configtool
+    ];
+  };
 
-  # git 相关配置
+  # Git 配置
   programs.git = {
     enable = true;
     userName = "sven";
     userEmail = "chr1768902202@gmail.com";
   };
 
-  # 启用 starship，这是一个漂亮的 shell 提示符
+  # Claude Code 配置
+  programs.claude-code = {
+    enable = true;
+    settings = {
+      # 基础配置
+      theme = "dark";
+      includeCoAuthoredBy = true;
+      
+      # 环境变量配置（包含代理设置）
+      env = {
+        http_proxy = "http://127.0.0.1:7897";
+        https_proxy = "http://127.0.0.1:7897";
+        all_proxy = "socks5://127.0.0.1:7897";
+      };
+      
+      # 权限配置
+      permissions = {
+        # 允许的操作
+        allow = [
+          "Read"
+          "Write" 
+          "Edit"
+          "MultiEdit"
+          "Glob"
+          "Grep"
+          "LS"
+          "Bash(git *)"
+          "Bash(nix *)"
+          "Bash(nixos-rebuild *)"
+        ];
+        
+        # 需要确认的操作
+        ask = [
+          "Bash(rm *)"
+          "Bash(sudo *)"
+          "WebFetch"
+        ];
+        
+        # 额外允许访问的目录
+        additionalDirectories = [
+          "../"
+          "/etc/nixos/"
+        ];
+      };
+    };
+  };
+
+  # Starship 终端提示符
   programs.starship = {
     enable = true;
-    # 自定义配置
     settings = {
       add_newline = false;
       aws.disabled = true;
@@ -61,10 +101,9 @@
     };
   };
 
-  # alacritty - 一个跨平台终端，带 GPU 加速功能
+  # Alacritty 终端配置
   programs.alacritty = {
     enable = true;
-    # 自定义配置
     settings = {
       env.TERM = "xterm-256color";
       font = {
@@ -76,26 +115,16 @@
     };
   };
 
+  # Bash 配置
   programs.bash = {
     enable = true;
     enableCompletion = true;
-    # TODO 在这里添加你的自定义 bashrc 内容
-    bashrcExtra = ''
-    '';
-
-    # TODO 设置一些别名方便使用，你可以根据自己的需要进行增删
+    bashrcExtra = '''';
     shellAliases = {
-      ai = "Claude --dangerously-skip-permissions";
+      ai = "claude --dangerously-skip-permissions";
     };
   };
 
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update Home Manager without changing this value. See
-  # the Home Manager release notes for a list of state version
-  # changes in each release.
+  # Home Manager 状态版本 (请勿随意修改)
   home.stateVersion = "25.05";
 }
