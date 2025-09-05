@@ -9,8 +9,9 @@
 
   # 引导加载器配置
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
+#  boot.loader.efiInstallAsRemovable = true;
 
   # 网络配置
   networking.hostName = "sven";
